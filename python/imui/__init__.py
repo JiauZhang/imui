@@ -4,4 +4,9 @@ from ._C import (
     __imgui_version_num__,
     ImVec2,
     ImVec4,
+
+    ImFontAtlas,
+    ImGuiContext,
+
+    CreateContext,
 )
