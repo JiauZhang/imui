@@ -9,4 +9,6 @@ from ._C import (
     ImGuiContext,
 
     CreateContext,
+    GetCurrentContext,
+    GetIO,
 )

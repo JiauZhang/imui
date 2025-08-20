@@ -8,6 +8,10 @@ from imui import (
     ImGuiContext,
 
     CreateContext,
+    GetCurrentContext,
+    GetIO,
+
+    flags
 )
 
 class TestClass:
@@ -27,7 +31,25 @@ class TestClass:
         imvec4.w = 3
         assert imvec4.x == 0 and imvec4.y == 1 and imvec4.z == 2 and imvec4.w == 3
 
-    def test_create_context(self):
+    def test_context(self):
         font = ImFontAtlas()
-        ctx = CreateContext(font)
-        assert isinstance(ctx, ImGuiContext)
+        ctx_1 = CreateContext(font)
+        assert isinstance(ctx_1, ImGuiContext)
+        assert ctx_1.Initialized == True
+
+        ctx_2 = GetCurrentContext()
+        assert ctx_1 is ctx_2
+
+        ctx_1.Initialized = False
+        assert ctx_2.Initialized == False
+
+    def test_ImGuiIO(self):
+        ctx = CreateContext()
+        io_1 = GetIO()
+        io_1.ConfigFlags = 1
+        io_1.ConfigFlags |= flags.ImGuiConfigFlags_NavEnableKeyboard
+        io_1.ConfigFlags |= flags.ImGuiConfigFlags_NavEnableGamepad
+        assert io_1.ConfigFlags == (1 | flags.ImGuiConfigFlags_NavEnableKeyboard | flags.ImGuiConfigFlags_NavEnableGamepad)
+
+        io_2 = GetIO()
+        assert io_2 is io_1

@@ -11,6 +11,8 @@ namespace nb = nanobind;
 
 namespace imui {
 
+extern void def_flags(nb::module_ & (m));
+
 std::string format(const char *fmt, ...) {
     va_list args;
     va_start(args, fmt);
@@ -29,6 +31,8 @@ std::string format(const char *fmt, ...) {
 }
 
 NB_MODULE(_C, m) {
+    def_flags(m);
+
     m.attr("__imgui_version__") = IMGUI_VERSION;
     m.attr("__imgui_version_num__") = IMGUI_VERSION_NUM;
 
@@ -40,7 +44,7 @@ NB_MODULE(_C, m) {
         .def("__str__", [](ImVec2 &self) { return format("(%f, %f)", self.x, self.y); })
         .def("__repr__", [](ImVec2 &self) { return format("ImVec2(x=%f, y=%f)", self.x, self.y); });
     nb::class_<ImVec4>(m, "ImVec4")
-    .def(nb::new_([]() { return ImVec4(); }))
+        .def(nb::new_([]() { return ImVec4(); }))
         .def(nb::new_([](float x, float y, float z, float w) { return ImVec4(x, y, z, w); }))
         .def_rw("x", &ImVec4::x)
         .def_rw("y", &ImVec4::y)
@@ -50,11 +54,17 @@ NB_MODULE(_C, m) {
         .def("__repr__", [](ImVec4 &self) { return format("ImVec4(x=%f, y=%f, z=%f, w=%f)", self.x, self.y, self.z, self.w); });
 
     nb::class_<ImFontAtlas>(m, "ImFontAtlas")
-        .def(nb::new_([]() { return ImFontAtlas(); }));
+        .def(nb::init<>());
     nb::class_<ImGuiContext>(m, "ImGuiContext")
-        .def(nb::new_([](ImFontAtlas* shared_font_atlas) { return ImGuiContext(shared_font_atlas); }));
+        .def(nb::init<ImFontAtlas *>())
+        .def_rw("Initialized", &ImGuiContext::Initialized);
+    nb::class_<ImGuiIO>(m, "ImGuiIO")
+        .def(nb::init<>())
+        .def_rw("ConfigFlags", &ImGuiIO::ConfigFlags);
 
     m.def("CreateContext", &ImGui::CreateContext, nb::arg("shared_font_atlas") = nullptr);
+    m.def("GetCurrentContext", &ImGui::GetCurrentContext);
+    m.def("GetIO", nb::overload_cast<>(&ImGui::GetIO), nb::rv_policy::reference);
 }
 
 } // namespace imui
