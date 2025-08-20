@@ -1,3 +1,4 @@
+import imui
 from imui import (
     __imgui_version__,
     __imgui_version_num__,
@@ -10,8 +11,6 @@ from imui import (
     CreateContext,
     GetCurrentContext,
     GetIO,
-
-    flags
 )
 
 class TestClass:
@@ -46,10 +45,13 @@ class TestClass:
     def test_ImGuiIO(self):
         ctx = CreateContext()
         io_1 = GetIO()
-        io_1.ConfigFlags = 1
-        io_1.ConfigFlags |= flags.ImGuiConfigFlags_NavEnableKeyboard
-        io_1.ConfigFlags |= flags.ImGuiConfigFlags_NavEnableGamepad
-        assert io_1.ConfigFlags == (1 | flags.ImGuiConfigFlags_NavEnableKeyboard | flags.ImGuiConfigFlags_NavEnableGamepad)
+        value = imui.ImGuiConfigFlags.NavEnableGamepad.value
+        io_1.ConfigFlags = imui.ImGuiConfigFlags.NavEnableGamepad
+        io_1.ConfigFlags |= imui.ImGuiConfigFlags.NoMouseCursorChange
+        value |= imui.ImGuiConfigFlags.NoMouseCursorChange.value
+        io_1.ConfigFlags |= imui.ImGuiConfigFlags.IsTouchScreen
+        value |= imui.ImGuiConfigFlags.IsTouchScreen.value
+        assert io_1.ConfigFlags == value
 
         io_2 = GetIO()
         assert io_2 is io_1

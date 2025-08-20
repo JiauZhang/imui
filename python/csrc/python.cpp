@@ -8,6 +8,7 @@
 #include <cstdarg>
 
 namespace nb = nanobind;
+using namespace nanobind::literals;
 
 namespace imui {
 
@@ -61,10 +62,22 @@ NB_MODULE(_C, m) {
     nb::class_<ImGuiIO>(m, "ImGuiIO")
         .def(nb::init<>())
         .def_rw("ConfigFlags", &ImGuiIO::ConfigFlags);
+    nb::class_<ImGuiStyle>(m, "ImGuiStyle")
+        .def(nb::init<>())
+        .def("ImGuiStyle", &ImGuiStyle::ScaleAllSizes)
+        .def_rw("FontScaleDpi", &ImGuiStyle::FontScaleDpi);
 
-    m.def("CreateContext", &ImGui::CreateContext, nb::arg("shared_font_atlas") = nullptr);
+    m.def("CreateContext", &ImGui::CreateContext, "shared_font_atlas"_a = nullptr);
     m.def("GetCurrentContext", &ImGui::GetCurrentContext);
     m.def("GetIO", nb::overload_cast<>(&ImGui::GetIO), nb::rv_policy::reference);
+    m.def("StyleColorsDark", &ImGui::StyleColorsDark, "dst"_a = nullptr);
+    m.def("GetStyle", &ImGui::GetStyle, nb::rv_policy::reference);
+    m.def("NewFrame", &ImGui::NewFrame);
+    m.def("Begin", &ImGui::Begin, "name"_a, "p_open"_a = nullptr, "flags"_a = 0);
+    m.def("End", &ImGui::End);
+    m.def("Text", [](const char *text) { ImGui::Text(text); });
+    m.def("Checkbox", &ImGui::Checkbox, "label"_a, "v"_a);
+    m.def("SliderFloat", &ImGui::SliderFloat, "label"_a, "v"_a, "v_min"_a, "v_max"_a, "format"_a = "%.3f", "flags"_a = 0);
 }
 
 } // namespace imui

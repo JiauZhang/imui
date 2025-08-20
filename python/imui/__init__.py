@@ -11,4 +11,7 @@ from ._C import (
     CreateContext,
     GetCurrentContext,
     GetIO,
+
+    ImGuiConfigFlags,
+    ImGuiSliderFlags,
 )

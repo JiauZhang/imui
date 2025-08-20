@@ -1,21 +1,42 @@
+import enum
 from typing import overload
 
 
-ImGuiConfigFlags_None: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_None
+class ImGuiConfigFlags(enum.IntEnum):
+    None = 0
 
-ImGuiConfigFlags_NavEnableKeyboard: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_NavEnableKeyboard
+    NavEnableKeyboard = 1
 
-ImGuiConfigFlags_NavEnableGamepad: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_NavEnableGamepad
+    NavEnableGamepad = 2
 
-ImGuiConfigFlags_NoMouse: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_NoMouse
+    NoMouse = 16
 
-ImGuiConfigFlags_NoMouseCursorChange: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_NoMouseCursorChange
+    NoMouseCursorChange = 32
 
-ImGuiConfigFlags_NoKeyboard: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_NoKeyboard
+    NoKeyboard = 64
 
-ImGuiConfigFlags_IsSRGB: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_IsSRGB
+    IsSRGB = 1048576
 
-ImGuiConfigFlags_IsTouchScreen: ImGuiConfigFlags_ = ImGuiConfigFlags_.ImGuiConfigFlags_IsTouchScreen
+    IsTouchScreen = 2097152
+
+class ImGuiSliderFlags(enum.IntEnum):
+    None = 0
+
+    Logarithmic = 32
+
+    NoRoundToFormat = 64
+
+    NoInput = 128
+
+    WrapAround = 256
+
+    ClampOnInput = 512
+
+    ClampZeroRange = 1024
+
+    NoSpeedTweaks = 2048
+
+    AlwaysClamp = 1536
 
 __imgui_version__: str = '1.92.2 WIP'
 
@@ -100,8 +121,35 @@ class ImGuiIO:
     @ConfigFlags.setter
     def ConfigFlags(self, arg: int, /) -> None: ...
 
+class ImGuiStyle:
+    def __init__(self) -> None: ...
+
+    def ImGuiStyle(self, arg: float, /) -> None: ...
+
+    @property
+    def FontScaleDpi(self) -> float: ...
+
+    @FontScaleDpi.setter
+    def FontScaleDpi(self, arg: float, /) -> None: ...
+
 def CreateContext(shared_font_atlas: ImFontAtlas | None = None) -> ImGuiContext: ...
 
 def GetCurrentContext() -> ImGuiContext: ...
 
 def GetIO() -> ImGuiIO: ...
+
+def StyleColorsDark(dst: ImGuiStyle | None = None) -> None: ...
+
+def GetStyle() -> ImGuiStyle: ...
+
+def NewFrame() -> None: ...
+
+def Begin(name: str, p_open: bool | None = None, flags: int = 0) -> bool: ...
+
+def End() -> None: ...
+
+def Text(arg: str, /) -> None: ...
+
+def Checkbox(label: str, v: bool) -> bool: ...
+
+def SliderFloat(label: str, v: float, v_min: float, v_max: float, format: str = '%.3f', flags: int = 0) -> bool: ...
