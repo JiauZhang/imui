@@ -13,6 +13,7 @@ using namespace nanobind::literals;
 namespace imui {
 
 extern void def_flags(nb::module_ & (m));
+extern void def_widgets(nb::module_ & (m));
 
 std::string format(const char *fmt, ...) {
     va_list args;
@@ -33,6 +34,7 @@ std::string format(const char *fmt, ...) {
 
 NB_MODULE(_C, m) {
     def_flags(m);
+    def_widgets(m);
 
     m.attr("__imgui_version__") = IMGUI_VERSION;
     m.attr("__imgui_version_num__") = IMGUI_VERSION_NUM;
@@ -75,9 +77,6 @@ NB_MODULE(_C, m) {
     m.def("NewFrame", &ImGui::NewFrame);
     m.def("Begin", &ImGui::Begin, "name"_a, "p_open"_a = nullptr, "flags"_a = 0);
     m.def("End", &ImGui::End);
-    m.def("Text", [](const char *text) { ImGui::Text(text); });
-    m.def("Checkbox", &ImGui::Checkbox, "label"_a, "v"_a);
-    m.def("SliderFloat", &ImGui::SliderFloat, "label"_a, "v"_a, "v_min"_a, "v_max"_a, "format"_a = "%.3f", "flags"_a = 0);
 }
 
 } // namespace imui

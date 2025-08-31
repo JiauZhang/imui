@@ -14,4 +14,8 @@ from ._C import (
 
     ImGuiConfigFlags,
     ImGuiSliderFlags,
+
+    Text,
+    Checkbox,
+    SliderFloat,
 )
