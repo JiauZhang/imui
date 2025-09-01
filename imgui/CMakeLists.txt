@@ -20,7 +20,7 @@ include_directories(
 add_library(
     imgui SHARED
     backends/imgui_impl_sdl3.cpp
-    backends/imgui_impl_sdlrenderer3.cpp
+    backends/imgui_impl_sdlgpu3.cpp
     imgui_draw.cpp
     imgui_tables.cpp
     imgui_widgets.cpp
