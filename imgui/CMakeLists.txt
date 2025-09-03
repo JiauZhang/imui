@@ -26,6 +26,6 @@ add_library(
     imgui_widgets.cpp
     imgui.cpp
 )
-target_link_libraries(imgui PRIVATE SDL3::SDL3)
+target_link_libraries(imgui PUBLIC SDL3::SDL3)
 
 install(TARGETS SDL3-shared imgui DESTINATION .)

@@ -14,6 +14,7 @@ namespace imui {
 
 extern void def_flags(nb::module_ & (m));
 extern void def_widgets(nb::module_ & (m));
+extern void def_sdl(nb::module_ & (m));
 
 std::string format(const char *fmt, ...) {
     va_list args;
@@ -35,6 +36,7 @@ std::string format(const char *fmt, ...) {
 NB_MODULE(_C, m) {
     def_flags(m);
     def_widgets(m);
+    def_sdl(m);
 
     m.attr("__imgui_version__") = IMGUI_VERSION;
     m.attr("__imgui_version_num__") = IMGUI_VERSION_NUM;
