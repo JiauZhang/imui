@@ -1,5 +1,5 @@
 Clear-Host
-python -m pip install .
+python -m pip install . --no-build-isolation
 python -m nanobind.stubgen -m imui._C -o python/imui/_C.pyi
 
 $imuiLocation = python -c "import imui, os; print(os.path.dirname(imui.__file__))" 2>$null
