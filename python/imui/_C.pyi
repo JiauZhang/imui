@@ -44,6 +44,24 @@ def Checkbox(label: str, v: bool) -> bool: ...
 
 def SliderFloat(label: str, v: float, v_min: float, v_max: float, format: str = '%.3f', flags: int = 0) -> bool: ...
 
+SDL_INIT_AUDIO: int = 16
+
+SDL_INIT_VIDEO: int = 32
+
+SDL_INIT_JOYSTICK: int = 512
+
+SDL_INIT_HAPTIC: int = 4096
+
+SDL_INIT_GAMEPAD: int = 8192
+
+SDL_INIT_EVENTS: int = 16384
+
+SDL_INIT_SENSOR: int = 32768
+
+SDL_INIT_CAMERA: int = 65536
+
+def SDL_Init(arg: int, /) -> bool: ...
+
 __imgui_version__: str = '1.92.2 WIP'
 
 __imgui_version_num__: int = 19214
