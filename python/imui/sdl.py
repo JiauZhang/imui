@@ -38,4 +38,6 @@ from ._C import (
     SDL_GetError,
     SDL_GetPrimaryDisplay,
     SDL_GetDisplayContentScale,
+    SDL_CreateWindow,
+    SDL_DestroyWindow,
 )

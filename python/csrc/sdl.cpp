@@ -7,6 +7,12 @@ using namespace nanobind::literals;
 
 namespace imui {
 
+struct SDL_Window_Wrapper {
+    SDL_Window_Wrapper(SDL_Window *w) : window(w) {};
+    struct SDL_Window *window;
+    bool __bool__() { return window != nullptr; }
+};
+
 void def_sdl(nb::module_ & (m)) {
     m.attr("SDL_INIT_AUDIO") = SDL_INIT_AUDIO;
     m.attr("SDL_INIT_VIDEO") = SDL_INIT_VIDEO;
@@ -47,6 +53,16 @@ void def_sdl(nb::module_ & (m)) {
     m.def("SDL_GetError", []() { return std::string(SDL_GetError()); });
     m.def("SDL_GetPrimaryDisplay", &SDL_GetPrimaryDisplay);
     m.def("SDL_GetDisplayContentScale", &SDL_GetDisplayContentScale);
+
+    nb::class_<SDL_Window_Wrapper>(m, "SDL_Window")
+        .def("__bool__", &SDL_Window_Wrapper::__bool__);
+    m.def("SDL_CreateWindow", [](const char *title, int w, int h, SDL_WindowFlags flags) {
+        SDL_Window *window = SDL_CreateWindow(title, w, h, flags);
+        return SDL_Window_Wrapper(window);
+    });
+    m.def("SDL_DestroyWindow", [](const SDL_Window_Wrapper &w) {
+        SDL_DestroyWindow(w.window);
+    });
 }
 
 } // namespace imui
