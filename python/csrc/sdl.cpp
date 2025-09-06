@@ -1,16 +1,24 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/stl/string.h>
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_gpu.h>
 
 namespace nb = nanobind;
 using namespace nanobind::literals;
 
 namespace imui {
 
+#define UnWrapper(var, T) (*((T **)(&var)))
+
 struct SDL_Window_Wrapper {
     SDL_Window_Wrapper(SDL_Window *w) : window(w) {};
     struct SDL_Window *window;
     bool __bool__() { return window != nullptr; }
+};
+struct SDL_GPUDevice_Wrapper {
+    SDL_GPUDevice_Wrapper(SDL_GPUDevice *g) : gpu_device(g) {};
+    SDL_GPUDevice *gpu_device;
+    bool __bool__() { return gpu_device != nullptr; }
 };
 
 void def_sdl(nb::module_ & (m)) {
@@ -49,6 +57,16 @@ void def_sdl(nb::module_ & (m)) {
     m.attr("SDL_WINDOW_TRANSPARENT") = SDL_WINDOW_TRANSPARENT;
     m.attr("SDL_WINDOW_NOT_FOCUSABLE") = SDL_WINDOW_NOT_FOCUSABLE;
 
+    m.attr("SDL_WINDOWPOS_CENTERED") = SDL_WINDOWPOS_CENTERED;
+
+    m.attr("SDL_GPU_SHADERFORMAT_INVALID") = SDL_GPU_SHADERFORMAT_INVALID;
+    m.attr("SDL_GPU_SHADERFORMAT_PRIVATE") = SDL_GPU_SHADERFORMAT_PRIVATE;
+    m.attr("SDL_GPU_SHADERFORMAT_SPIRV") = SDL_GPU_SHADERFORMAT_SPIRV;
+    m.attr("SDL_GPU_SHADERFORMAT_DXBC") = SDL_GPU_SHADERFORMAT_DXBC;
+    m.attr("SDL_GPU_SHADERFORMAT_DXIL") = SDL_GPU_SHADERFORMAT_DXIL;
+    m.attr("SDL_GPU_SHADERFORMAT_MSL") = SDL_GPU_SHADERFORMAT_MSL;
+    m.attr("SDL_GPU_SHADERFORMAT_METALLIB") = SDL_GPU_SHADERFORMAT_METALLIB;
+
     m.def("SDL_Init", &SDL_Init);
     m.def("SDL_GetError", []() { return std::string(SDL_GetError()); });
     m.def("SDL_GetPrimaryDisplay", &SDL_GetPrimaryDisplay);
@@ -60,8 +78,18 @@ void def_sdl(nb::module_ & (m)) {
         SDL_Window *window = SDL_CreateWindow(title, w, h, flags);
         return SDL_Window_Wrapper(window);
     });
-    m.def("SDL_DestroyWindow", [](const SDL_Window_Wrapper &w) {
-        SDL_DestroyWindow(w.window);
+    m.def("SDL_DestroyWindow", [](const SDL_Window_Wrapper &w) { SDL_DestroyWindow(UnWrapper(w, SDL_Window)); });
+    m.def("SDL_SetWindowPosition", [](const SDL_Window_Wrapper &w, int x, int y) { return SDL_SetWindowPosition(w.window, x, y); });
+    m.def("SDL_ShowWindow", [](const SDL_Window_Wrapper &w) { return SDL_ShowWindow(UnWrapper(w, SDL_Window)); });
+
+    nb::class_<SDL_GPUDevice_Wrapper>(m, "SDL_GPUDevice")
+        .def("__bool__", &SDL_GPUDevice_Wrapper::__bool__);
+    m.def("SDL_CreateGPUDevice", [](SDL_GPUShaderFormat format_flags, bool debug_mode, const char *name) {
+        if (*name == '\0') name = nullptr;
+        return SDL_GPUDevice_Wrapper(SDL_CreateGPUDevice(format_flags, debug_mode, name));
+    }, "format_flags"_a, "debug_mode"_a, "name"_a = "");
+    m.def("SDL_ClaimWindowForGPUDevice", [](const SDL_GPUDevice_Wrapper &g, const SDL_Window_Wrapper &w) {
+        return SDL_ClaimWindowForGPUDevice(UnWrapper(g, SDL_GPUDevice), UnWrapper(w, SDL_Window));
     });
 }
 

@@ -34,10 +34,24 @@ from ._C import (
     SDL_WINDOW_TRANSPARENT,
     SDL_WINDOW_NOT_FOCUSABLE,
 
+    SDL_WINDOWPOS_CENTERED,
+
+    SDL_GPU_SHADERFORMAT_INVALID,
+    SDL_GPU_SHADERFORMAT_PRIVATE,
+    SDL_GPU_SHADERFORMAT_SPIRV,
+    SDL_GPU_SHADERFORMAT_DXBC,
+    SDL_GPU_SHADERFORMAT_DXIL,
+    SDL_GPU_SHADERFORMAT_MSL,
+    SDL_GPU_SHADERFORMAT_METALLIB,
+
     SDL_Init,
     SDL_GetError,
     SDL_GetPrimaryDisplay,
     SDL_GetDisplayContentScale,
     SDL_CreateWindow,
     SDL_DestroyWindow,
+    SDL_SetWindowPosition,
+    SDL_ShowWindow,
+    SDL_CreateGPUDevice,
+    SDL_ClaimWindowForGPUDevice,
 )

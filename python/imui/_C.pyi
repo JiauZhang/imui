@@ -110,6 +110,22 @@ SDL_WINDOW_TRANSPARENT: int = 1073741824
 
 SDL_WINDOW_NOT_FOCUSABLE: int = 2147483648
 
+SDL_WINDOWPOS_CENTERED: int = 805240832
+
+SDL_GPU_SHADERFORMAT_INVALID: int = 0
+
+SDL_GPU_SHADERFORMAT_PRIVATE: int = 1
+
+SDL_GPU_SHADERFORMAT_SPIRV: int = 2
+
+SDL_GPU_SHADERFORMAT_DXBC: int = 4
+
+SDL_GPU_SHADERFORMAT_DXIL: int = 8
+
+SDL_GPU_SHADERFORMAT_MSL: int = 16
+
+SDL_GPU_SHADERFORMAT_METALLIB: int = 32
+
 def SDL_Init(arg: int, /) -> bool: ...
 
 def SDL_GetError() -> str: ...
@@ -124,6 +140,17 @@ class SDL_Window:
 def SDL_CreateWindow(arg0: str, arg1: int, arg2: int, arg3: int, /) -> SDL_Window: ...
 
 def SDL_DestroyWindow(arg: SDL_Window, /) -> None: ...
+
+def SDL_SetWindowPosition(arg0: SDL_Window, arg1: int, arg2: int, /) -> bool: ...
+
+def SDL_ShowWindow(arg: SDL_Window, /) -> bool: ...
+
+class SDL_GPUDevice:
+    def __bool__(self) -> bool: ...
+
+def SDL_CreateGPUDevice(format_flags: int, debug_mode: bool, name: str = '') -> SDL_GPUDevice: ...
+
+def SDL_ClaimWindowForGPUDevice(arg0: SDL_GPUDevice, arg1: SDL_Window, /) -> bool: ...
 
 __imgui_version__: str = '1.92.2 WIP'
 
