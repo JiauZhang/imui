@@ -1,3 +1,15 @@
+from imui import (
+    IMGUI_CHECKVERSION,
+    CreateContext,
+    GetIO,
+    StyleColorsDark,
+    GetStyle,
+    NewFrame,
+    Begin,
+    End,
+
+    ImGuiConfigFlags,
+)
 from imui.sdl import (
     SDL_Init,
     SDL_GetError,
@@ -8,6 +20,7 @@ from imui.sdl import (
     SDL_ShowWindow,
     SDL_CreateGPUDevice,
     SDL_ClaimWindowForGPUDevice,
+    SDL_SetGPUSwapchainParameters,
 
     SDL_INIT_VIDEO,
     SDL_INIT_GAMEPAD,
@@ -21,6 +34,8 @@ from imui.sdl import (
     SDL_GPU_SHADERFORMAT_SPIRV,
     SDL_GPU_SHADERFORMAT_DXIL,
     SDL_GPU_SHADERFORMAT_METALLIB,
+    SDL_GPU_SWAPCHAINCOMPOSITION_SDR,
+    SDL_GPU_PRESENTMODE_VSYNC,
 )
 
 if not SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD):
@@ -45,3 +60,16 @@ if not gpu_device:
 if not SDL_ClaimWindowForGPUDevice(gpu_device, window):
     print(f'Error: SDL_ClaimWindowForGPUDevice(): {SDL_GetError()}')
     exit(-1)
+SDL_SetGPUSwapchainParameters(gpu_device, window, SDL_GPU_SWAPCHAINCOMPOSITION_SDR, SDL_GPU_PRESENTMODE_VSYNC)
+
+IMGUI_CHECKVERSION()
+CreateContext()
+io = GetIO()
+io.ConfigFlags |= ImGuiConfigFlags.NavEnableKeyboard
+io.ConfigFlags |= ImGuiConfigFlags.NavEnableGamepad
+
+StyleColorsDark()
+
+style = GetStyle()
+style.ScaleAllSizes(main_scale)
+style.FontScaleDpi = main_scale

@@ -12,11 +12,6 @@ set(SDL_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(SDL_INSTALL OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(SDL3)
 
-include_directories(
-    ${CMAKE_SOURCE_DIR}/imgui
-    ${CMAKE_SOURCE_DIR}/imgui/backends
-)
-
 add_library(
     imgui SHARED
     backends/imgui_impl_sdl3.cpp

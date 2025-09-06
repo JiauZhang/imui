@@ -11,7 +11,11 @@ if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL")
 endif()
 
-include_directories(${CMAKE_SOURCE_DIR})
+include_directories(
+    ${CMAKE_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/imgui
+    ${CMAKE_SOURCE_DIR}/imgui/backends
+)
 
 add_subdirectory(imgui)
 add_subdirectory(python)

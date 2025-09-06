@@ -8,9 +8,15 @@ from ._C import (
     ImFontAtlas,
     ImGuiContext,
 
+    IMGUI_CHECKVERSION,
     CreateContext,
     GetCurrentContext,
     GetIO,
+    StyleColorsDark,
+    GetStyle,
+    NewFrame,
+    Begin,
+    End,
 
     ImGuiConfigFlags,
     ImGuiSliderFlags,

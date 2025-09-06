@@ -126,6 +126,20 @@ SDL_GPU_SHADERFORMAT_MSL: int = 16
 
 SDL_GPU_SHADERFORMAT_METALLIB: int = 32
 
+SDL_GPU_SWAPCHAINCOMPOSITION_SDR: int = 0
+
+SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR: int = 1
+
+SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR: int = 2
+
+SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084: int = 3
+
+SDL_GPU_PRESENTMODE_VSYNC: int = 0
+
+SDL_GPU_PRESENTMODE_IMMEDIATE: int = 1
+
+SDL_GPU_PRESENTMODE_MAILBOX: int = 2
+
 def SDL_Init(arg: int, /) -> bool: ...
 
 def SDL_GetError() -> str: ...
@@ -151,6 +165,8 @@ class SDL_GPUDevice:
 def SDL_CreateGPUDevice(format_flags: int, debug_mode: bool, name: str = '') -> SDL_GPUDevice: ...
 
 def SDL_ClaimWindowForGPUDevice(arg0: SDL_GPUDevice, arg1: SDL_Window, /) -> bool: ...
+
+def SDL_SetGPUSwapchainParameters(device: SDL_GPUDevice, window: SDL_Window, swapchain_composition: int, present_mode: int) -> bool: ...
 
 __imgui_version__: str = '1.92.2 WIP'
 
@@ -238,13 +254,15 @@ class ImGuiIO:
 class ImGuiStyle:
     def __init__(self) -> None: ...
 
-    def ImGuiStyle(self, arg: float, /) -> None: ...
+    def ScaleAllSizes(self, arg: float, /) -> None: ...
 
     @property
     def FontScaleDpi(self) -> float: ...
 
     @FontScaleDpi.setter
     def FontScaleDpi(self, arg: float, /) -> None: ...
+
+def IMGUI_CHECKVERSION() -> bool: ...
 
 def CreateContext(shared_font_atlas: ImFontAtlas | None = None) -> ImGuiContext: ...
 

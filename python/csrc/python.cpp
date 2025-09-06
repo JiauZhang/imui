@@ -68,9 +68,10 @@ NB_MODULE(_C, m) {
         .def_rw("ConfigFlags", &ImGuiIO::ConfigFlags);
     nb::class_<ImGuiStyle>(m, "ImGuiStyle")
         .def(nb::init<>())
-        .def("ImGuiStyle", &ImGuiStyle::ScaleAllSizes)
+        .def("ScaleAllSizes", &ImGuiStyle::ScaleAllSizes)
         .def_rw("FontScaleDpi", &ImGuiStyle::FontScaleDpi);
 
+    m.def("IMGUI_CHECKVERSION", []() { return IMGUI_CHECKVERSION(); });
     m.def("CreateContext", &ImGui::CreateContext, "shared_font_atlas"_a = nullptr);
     m.def("GetCurrentContext", &ImGui::GetCurrentContext);
     m.def("GetIO", nb::overload_cast<>(&ImGui::GetIO), nb::rv_policy::reference);

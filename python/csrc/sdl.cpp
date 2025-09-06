@@ -67,6 +67,15 @@ void def_sdl(nb::module_ & (m)) {
     m.attr("SDL_GPU_SHADERFORMAT_MSL") = SDL_GPU_SHADERFORMAT_MSL;
     m.attr("SDL_GPU_SHADERFORMAT_METALLIB") = SDL_GPU_SHADERFORMAT_METALLIB;
 
+    m.attr("SDL_GPU_SWAPCHAINCOMPOSITION_SDR") = (int)SDL_GPUSwapchainComposition::SDL_GPU_SWAPCHAINCOMPOSITION_SDR;
+    m.attr("SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR") = (int)SDL_GPUSwapchainComposition::SDL_GPU_SWAPCHAINCOMPOSITION_SDR_LINEAR;
+    m.attr("SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR") = (int)SDL_GPUSwapchainComposition::SDL_GPU_SWAPCHAINCOMPOSITION_HDR_EXTENDED_LINEAR;
+    m.attr("SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084") = (int)SDL_GPUSwapchainComposition::SDL_GPU_SWAPCHAINCOMPOSITION_HDR10_ST2084;
+
+    m.attr("SDL_GPU_PRESENTMODE_VSYNC") = (int)SDL_GPUPresentMode::SDL_GPU_PRESENTMODE_VSYNC;
+    m.attr("SDL_GPU_PRESENTMODE_IMMEDIATE") = (int)SDL_GPUPresentMode::SDL_GPU_PRESENTMODE_IMMEDIATE;
+    m.attr("SDL_GPU_PRESENTMODE_MAILBOX") = (int)SDL_GPUPresentMode::SDL_GPU_PRESENTMODE_MAILBOX;
+
     m.def("SDL_Init", &SDL_Init);
     m.def("SDL_GetError", []() { return std::string(SDL_GetError()); });
     m.def("SDL_GetPrimaryDisplay", &SDL_GetPrimaryDisplay);
@@ -91,6 +100,11 @@ void def_sdl(nb::module_ & (m)) {
     m.def("SDL_ClaimWindowForGPUDevice", [](const SDL_GPUDevice_Wrapper &g, const SDL_Window_Wrapper &w) {
         return SDL_ClaimWindowForGPUDevice(UnWrapper(g, SDL_GPUDevice), UnWrapper(w, SDL_Window));
     });
+    m.def("SDL_SetGPUSwapchainParameters", [](const SDL_GPUDevice_Wrapper &g, const SDL_Window_Wrapper &w, int sc, int pm) {
+        return SDL_SetGPUSwapchainParameters(
+            UnWrapper(g, SDL_GPUDevice), UnWrapper(w, SDL_Window), (SDL_GPUSwapchainComposition)sc, (SDL_GPUPresentMode)pm
+        );
+    }, "device"_a, "window"_a, "swapchain_composition"_a, "present_mode"_a);
 }
 
 } // namespace imui
