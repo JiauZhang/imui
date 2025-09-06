@@ -2,6 +2,8 @@
 #include <nanobind/stl/string.h>
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_gpu.h>
+#include <imgui/backends/imgui_impl_sdl3.h>
+#include <imgui/backends/imgui_impl_sdlgpu3.h>
 
 namespace nb = nanobind;
 using namespace nanobind::literals;
@@ -77,6 +79,7 @@ void def_sdl(nb::module_ & (m)) {
     m.attr("SDL_GPU_PRESENTMODE_MAILBOX") = (int)SDL_GPUPresentMode::SDL_GPU_PRESENTMODE_MAILBOX;
 
     m.def("SDL_Init", &SDL_Init);
+    m.def("SDL_Delay", &SDL_Delay);
     m.def("SDL_GetError", []() { return std::string(SDL_GetError()); });
     m.def("SDL_GetPrimaryDisplay", &SDL_GetPrimaryDisplay);
     m.def("SDL_GetDisplayContentScale", &SDL_GetDisplayContentScale);
@@ -105,6 +108,43 @@ void def_sdl(nb::module_ & (m)) {
             UnWrapper(g, SDL_GPUDevice), UnWrapper(w, SDL_Window), (SDL_GPUSwapchainComposition)sc, (SDL_GPUPresentMode)pm
         );
     }, "device"_a, "window"_a, "swapchain_composition"_a, "present_mode"_a);
+    m.def("SDL_GetGPUSwapchainTextureFormat", [](const SDL_GPUDevice_Wrapper &g, const SDL_Window_Wrapper &w) {
+        return (int)SDL_GetGPUSwapchainTextureFormat(UnWrapper(g, SDL_GPUDevice), UnWrapper(w, SDL_Window));
+    }, "device"_a, "window"_a);
+
+    m.def("ImGui_ImplSDL3_InitForSDLGPU", [](const SDL_Window_Wrapper &w) {
+        return ImGui_ImplSDL3_InitForSDLGPU(UnWrapper(w, SDL_Window));
+    });
+
+    nb::enum_<SDL_GPUSampleCount>(m, "SDL_GPUSampleCount", nb::is_arithmetic())
+        .value("SAMPLECOUNT_1", SDL_GPUSampleCount::SDL_GPU_SAMPLECOUNT_1);
+    nb::class_<ImGui_ImplSDLGPU3_InitInfo>(m, "ImGui_ImplSDLGPU3_InitInfo")
+        .def(nb::init<>())
+        .def_prop_rw("Device",
+            [](ImGui_ImplSDLGPU3_InitInfo &info) { return SDL_GPUDevice_Wrapper(info.Device); },
+            [](ImGui_ImplSDLGPU3_InitInfo &info, SDL_GPUDevice_Wrapper &g) { info.Device = UnWrapper(g, SDL_GPUDevice); })
+        .def_prop_rw("ColorTargetFormat",
+            [](ImGui_ImplSDLGPU3_InitInfo &info) { return (int)info.ColorTargetFormat; },
+            [](ImGui_ImplSDLGPU3_InitInfo &info, int format) { info.ColorTargetFormat = (SDL_GPUTextureFormat)format; })
+        .def_rw("MSAASamples", &ImGui_ImplSDLGPU3_InitInfo::MSAASamples);
+
+    m.def("ImGui_ImplSDLGPU3_Init", &ImGui_ImplSDLGPU3_Init);
+
+    nb::class_<SDL_Event>(m, "SDL_Event")
+        .def(nb::init<>())
+        .def_rw("type", &SDL_Event::type)
+        .def_rw("window", &SDL_Event::window);
+    nb::enum_<SDL_EventType>(m, "SDL_EventType")
+        .value("QUIT", SDL_EventType::SDL_EVENT_QUIT)
+        .value("WINDOW_CLOSE_REQUESTED", SDL_EventType::SDL_EVENT_WINDOW_CLOSE_REQUESTED);
+    nb::class_<SDL_WindowEvent>(m, "SDL_WindowEvent")
+        .def_rw("windowID", &SDL_WindowEvent::windowID);
+    m.def("SDL_PollEvent", &SDL_PollEvent);
+    m.def("SDL_GetWindowID", [](const SDL_Window_Wrapper &w) { return SDL_GetWindowID(UnWrapper(w, SDL_Window)); });
+    m.def("SDL_GetWindowFlags", [](const SDL_Window_Wrapper &w) { return SDL_GetWindowFlags(UnWrapper(w, SDL_Window)); });
+    m.def("ImGui_ImplSDL3_ProcessEvent", &ImGui_ImplSDL3_ProcessEvent);
+    m.def("ImGui_ImplSDLGPU3_NewFrame", &ImGui_ImplSDLGPU3_NewFrame);
+    m.def("ImGui_ImplSDL3_NewFrame", &ImGui_ImplSDL3_NewFrame);
 }
 
 } // namespace imui

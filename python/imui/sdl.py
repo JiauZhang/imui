@@ -52,6 +52,7 @@ from ._C import (
     SDL_GPU_PRESENTMODE_MAILBOX,
 
     SDL_Init,
+    SDL_Delay,
     SDL_GetError,
     SDL_GetPrimaryDisplay,
     SDL_GetDisplayContentScale,
@@ -62,4 +63,20 @@ from ._C import (
     SDL_CreateGPUDevice,
     SDL_ClaimWindowForGPUDevice,
     SDL_SetGPUSwapchainParameters,
+    SDL_GetGPUSwapchainTextureFormat,
+
+    ImGui_ImplSDL3_InitForSDLGPU,
+    ImGui_ImplSDLGPU3_InitInfo,
+    SDL_GPUSampleCount,
+    ImGui_ImplSDLGPU3_Init,
+
+    SDL_Event,
+    SDL_EventType,
+    SDL_WindowEvent,
+    SDL_PollEvent,
+    SDL_GetWindowID,
+    SDL_GetWindowFlags,
+    ImGui_ImplSDL3_ProcessEvent,
+    ImGui_ImplSDLGPU3_NewFrame,
+    ImGui_ImplSDL3_NewFrame,
 )

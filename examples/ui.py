@@ -9,9 +9,11 @@ from imui import (
     End,
 
     ImGuiConfigFlags,
+    ImVec4,
 )
 from imui.sdl import (
     SDL_Init,
+    SDL_Delay,
     SDL_GetError,
     SDL_GetPrimaryDisplay,
     SDL_GetDisplayContentScale,
@@ -21,11 +23,28 @@ from imui.sdl import (
     SDL_CreateGPUDevice,
     SDL_ClaimWindowForGPUDevice,
     SDL_SetGPUSwapchainParameters,
+    SDL_GetGPUSwapchainTextureFormat,
+
+    ImGui_ImplSDL3_InitForSDLGPU,
+    ImGui_ImplSDLGPU3_InitInfo,
+    SDL_GPUSampleCount,
+    ImGui_ImplSDLGPU3_Init,
+
+    SDL_Event,
+    SDL_EventType,
+    SDL_WindowEvent,
+    SDL_PollEvent,
+    SDL_GetWindowID,
+    SDL_GetWindowFlags,
+    ImGui_ImplSDL3_ProcessEvent,
+    ImGui_ImplSDLGPU3_NewFrame,
+    ImGui_ImplSDL3_NewFrame,
 
     SDL_INIT_VIDEO,
     SDL_INIT_GAMEPAD,
 
     SDL_WINDOW_RESIZABLE,
+    SDL_WINDOW_MINIMIZED,
     SDL_WINDOW_HIDDEN,
     SDL_WINDOW_HIGH_PIXEL_DENSITY,
 
@@ -73,3 +92,33 @@ StyleColorsDark()
 style = GetStyle()
 style.ScaleAllSizes(main_scale)
 style.FontScaleDpi = main_scale
+
+ImGui_ImplSDL3_InitForSDLGPU(window)
+
+init_info = ImGui_ImplSDLGPU3_InitInfo()
+init_info.Device = gpu_device
+init_info.ColorTargetFormat = SDL_GetGPUSwapchainTextureFormat(gpu_device, window)
+init_info.MSAASamples = SDL_GPUSampleCount.SAMPLECOUNT_1
+ImGui_ImplSDLGPU3_Init(init_info)
+
+show_demo_window = True
+show_another_window = False
+clear_color = ImVec4(0.45, 0.55, 0.60, 1.00)
+
+done = False
+while not done:
+    event = SDL_Event()
+    while SDL_PollEvent(event):
+        ImGui_ImplSDL3_ProcessEvent(event)
+        if event.type == SDL_EventType.QUIT:
+            done = True
+        if event.type == SDL_EventType.WINDOW_CLOSE_REQUESTED and event.window.windowID == SDL_GetWindowID(window):
+            done = True
+
+    if SDL_GetWindowFlags(window) & SDL_WINDOW_MINIMIZED:
+        SDL_Delay(10)
+        continue
+
+    ImGui_ImplSDLGPU3_NewFrame()
+    ImGui_ImplSDL3_NewFrame()
+    NewFrame()
